@@ -21,4 +21,4 @@ jobs:
         run: npm install
 
       - name: Docker
-        run: docker --version
+        run: docker run docker/whalesay example-container
