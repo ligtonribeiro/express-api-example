@@ -1,0 +1,21 @@
+name: "Testando API Express"
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Instalação Nodejs
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Instalação das dependências
+        run: npm install
