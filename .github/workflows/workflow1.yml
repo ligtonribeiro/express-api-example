@@ -21,7 +21,12 @@ jobs:
         run: npm install
 
       - name: Executando a aplicação em um Docker Container
-        run: docker run -d -p 3000:3000 --name express-api -v $(pwd):/app -w /app node:16-slim node index.js
+        run: docker run -d --name express-api -v $(pwd):/app -w /app node:16-slim node index.js
 
-      - name: Testando a aplicação
-        run: curl http://localhost:3000/hello
+      - name: Instalando cURL
+        run: |
+          docker exec -i express-api apt-get update
+          docker exec -i express-api apt-get install curl
+
+      - name: Testando app
+        run: docker exec -i express-api curl http://localhost:3000/hello | json_pp
