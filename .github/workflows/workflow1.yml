@@ -22,3 +22,6 @@ jobs:
 
       - name: Executando a aplicação em um Docker Container
         run: docker run -d -p 3000:3000 --name express-api -v $(pwd):/app -w /app node:16-slim node index.js
+
+      - name: Testando a aplicação
+        run: curl http://localhost:3000/hello
