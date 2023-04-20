@@ -10,7 +10,7 @@ $ npm install
 $ node index.js
 ```
 
-3. Para testar a API, abra o browser e acesso a seguinte URL:
+3. Para testar a API, abra o browser e acesse a seguinte URL:
 ```
-http://localhost:3000
+http://localhost:3000/hello
 ```
