@@ -27,7 +27,7 @@ jobs:
       - name: Instalando cURL
         run: |
           docker exec -i express-api apt-get update
-          docker exec -i express-api apt-get install curl
+          docker exec -i express-api apt-get install curl -y
 
       - name: Testando app
         run: docker exec -i express-api curl http://localhost:3000/hello | json_pp
