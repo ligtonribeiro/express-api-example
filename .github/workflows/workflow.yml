@@ -21,8 +21,11 @@ jobs:
       - name: Instalação das dependências
         run: npm install
 
+      - name: Build
+        run: npm run build
+
       - name: Executando a aplicação em um Docker Container
-        run: docker run -d --name express-api -v $(pwd):/app -w /app node:16-slim node index.js
+        run: docker run -d --name express-api -v $(pwd):/app -w /app node:16-slim node dist/server.js
 
       - name: Instalando cURL
         run: |
@@ -30,4 +33,4 @@ jobs:
           docker exec -i express-api apt-get install curl -y
 
       - name: Testando app
-        run: docker exec -i express-api curl http://localhost:3000/hello | json_pp
+        run: docker exec -i express-api curl http://localhost:3000/users | json_pp
