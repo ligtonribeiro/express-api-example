@@ -14,16 +14,16 @@ jobs:
           SSH_HOST: ${{ secrets.GCP_SSH_HOST }}
           SSH_KEY: ${{ secrets.GCP_SSH_KEY }}
         run: |
-          # mkdir ~/.ssh
-          # echo "$SSH_KEY" > ~/.ssh/id_rsa_gcp
-          # chmod 600 ~/.ssh/id_rsa_gcp
-          # cat >> ~/.ssh/config << END
-          #   Host google-cloud
-          #   HostName $SSH_HOST
-          #   User $SSH_USER
-          #   IdentityFile ~/.ssh/id_rsa_gcp
-          #   StrictHostKeyChecking no
-          # END
+          mkdir ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/id_rsa_gcp
+          chmod 600 ~/.ssh/id_rsa_gcp
+          cat >> ~/.ssh/config << END
+            Host google-cloud
+            HostName $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/id_rsa_gcp
+            StrictHostKeyChecking no
+          END
 
       - name: Application deployment
         run: ssh google-cloud ./deploy.sh
