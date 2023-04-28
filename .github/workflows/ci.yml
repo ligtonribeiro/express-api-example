@@ -1,8 +1,7 @@
-name: "Testando API"
+name: "Testes"
 
 on:
-  pull_request:
-    branches: ["*"]
+  workflow_call:
 
 jobs:
   test:
@@ -38,8 +37,3 @@ jobs:
             -Dsonar.typescript.file.suffixes=.ts
             -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
             -Dsonar.sourceEncoding=UTF-8
-  deploy:
-    needs: test
-    if: github.ref == 'refs/heads/main'
-    uses: ./.github/workflows/cd.yml
-    secrets: inherit
