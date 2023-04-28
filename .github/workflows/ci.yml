@@ -1,8 +1,7 @@
 name: "Testes"
 
 on:
-  pull_request:
-    branches: ["*"]
+  workflow_call:
 
 jobs:
   test:

@@ -3,9 +3,16 @@ name: "CD"
 on:
   push:
     branches: ["main"]
+  pull_request:
+    branches: ["*"]
 
 jobs:
+  tests:
+    uses: ./.github/workflows/ci.yml
+    secrets: inherit
+
   deploy:
+    needs: tests
     runs-on: ubuntu-latest
 
     steps:
@@ -30,4 +37,5 @@ jobs:
           END
 
       - name: Application deployment
+        if: github.ref == 'refs/heads/main'
         run: ssh google-cloud ./deploy.sh
