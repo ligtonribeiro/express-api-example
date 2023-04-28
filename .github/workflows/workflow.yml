@@ -33,7 +33,7 @@ jobs:
           args: >
             -Dsonar.organization=ligtonribeiro
             -Dsonar.projectKey=ligtonribeiro_express-api-example
-            -Dorganization-key ligtonribeiro
+            -Dorganization-key=ligtonribeiro
             -Dsonar.sources=src
             -Dsonar.language=js,ts
             -Dsonar.javascript.file.suffixes=.js
