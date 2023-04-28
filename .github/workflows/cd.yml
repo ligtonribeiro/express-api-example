@@ -9,6 +9,7 @@ on:
 jobs:
   test:
     uses: ./.github/workflows/ci.yml
+    secrets: inherit
 
   deploy:
     needs: test
@@ -36,5 +37,5 @@ jobs:
           END
 
       - name: Application deployment
-        if: github.ref == 'refs/heads/develop'
+        if: github.ref == 'refs/heads/main'
         run: ssh google-cloud ./deploy.sh
