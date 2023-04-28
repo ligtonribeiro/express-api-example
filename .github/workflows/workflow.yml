@@ -24,16 +24,8 @@ jobs:
       - name: Executando Testes
         run: npm run test
 
-      - name: Build
-        run: npm run build
-
-      - name: Executando a aplicação em um Docker Container
-        run: docker run -d --name express-api -v $(pwd):/app -w /app node:16-slim node dist/server.js
-
-      - name: Instalando cURL
-        run: |
-          docker exec -i express-api apt-get update
-          docker exec -i express-api apt-get install curl -y
-
-      - name: Testando app
-        run: docker exec -i express-api curl http://localhost:3000/users | json_pp
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
