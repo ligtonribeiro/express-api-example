@@ -41,3 +41,4 @@ jobs:
   deploy:
     needs: test
     uses: ./.github/workflows/cd.yml
+    secrets: inherit
