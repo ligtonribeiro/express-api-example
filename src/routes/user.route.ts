@@ -3,7 +3,12 @@ import { Router, Request, Response } from "express";
 const router = Router();
 
 router.get("/", (req: Request, res: Response) => {
-  let users = ["Wellington", "Rosimeire", "Luanny", "Luan"];
+  let users = [
+    "Wellington Menezes",
+    "Rosimeire Melo",
+    "Luanny Maria",
+    "Luan Marx",
+  ];
   res.status(200).json(users);
 });
 
