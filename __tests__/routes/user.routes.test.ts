@@ -5,10 +5,10 @@ describe("Users Routes", () => {
   it("Get all users", async () => {
     const res = await request(app).get("/users");
     expect(res.body).toEqual([
-      "Wellington Menezes",
-      "Rosimeire Melo",
-      "Luanny Maria",
-      "Luan Marx",
+      { id: 1, nome: "Wellington Menezes" },
+      { id: 2, nome: "Rosimeire Menezes" },
+      { id: 3, nome: "Luanny Menezes" },
+      { id: 4, nome: "Luan Menezes" },
     ]);
   });
 });

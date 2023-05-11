@@ -4,10 +4,10 @@ const router = Router();
 
 router.get("/", (req: Request, res: Response) => {
   let users = [
-    "Wellington Menezes",
-    "Rosimeire Melo",
-    "Luanny Maria",
-    "Luan Marx",
+    { id: 1, nome: "Wellington Menezes" },
+    { id: 2, nome: "Rosimeire Menezes" },
+    { id: 3, nome: "Luanny Menezes" },
+    { id: 4, nome: "Luan Menezes" },
   ];
   res.status(200).json(users);
 });
