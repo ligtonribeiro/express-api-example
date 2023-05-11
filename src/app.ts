@@ -5,8 +5,8 @@ const app: Application = express();
 app.disable("x-power-by");
 
 app.use("/users", userRoutes);
-app.use("/", (req: Request, res: Response, next: NextFunction) => {
-  res.json({ message: "Express and Jest Example - IT Talent Program" });
+app.use("/version", (req: Request, res: Response, next: NextFunction) => {
+  res.json({ version: "1.0.1-release" });
 });
 
 export default app;

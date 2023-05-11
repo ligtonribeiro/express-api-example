@@ -4,9 +4,9 @@ import app from "../src/app";
 
 describe("Test app.ts", () => {
   it("Root route", async () => {
-    const res = await request(app).get("/");
+    const res = await request(app).get("/version");
     expect(res.body).toEqual({
-      message: "Express and Jest Example - IT Talent Program",
+      version: "1.0.1-release",
     });
   });
 });
