@@ -1,39 +1,45 @@
 #!/bin/bash
 
-echo "Starting pipeline"
+echo "#--------------------------------------------#"
+echo "#             PIPELINE START                 #"
+echo "#--------------------------------------------#"
 
-echo "Stop service application..."
-echo
-sudo systemctl stop express-api.service
-echo
+case "$1" in
+	--prod)
+		sudo systemctl start express-api-prod.service
+		if [ -d $HOME/api-prod ]
+		then
+			rm -rf $HOME/api-prod
+			git clone -b main git@github.com:ligtonribeiro/express-api-example.git api-prod
+		else
+			git clone -n main git@github.com:ligtonribeiro/express-api-example.git api-prod
+		fi
+		cd $HOME/express-api-example
+		npm install
+		npm run build
+		sudo systemctl start express-api-prod.service
+	;;
+	--release)
+		sudo systemctl start express-api-dev.service
+		if [ -d $HOME/api-release ]
+		then
+			rm -rf $HOME/api-release
+			git clone -b release git@github.com:ligtonribeiro/express-api-example.git api-release
+		else
+			git clone -n release git@github.com:ligtonribeiro/express-api-example.git api-release
+		fi
+		cd $HOME/api-release
+		npm install
+		npm run build
+		sudo systemctl start express-api-dev.service
+	;;
+	*)
+		echo Opção inválida: $1
+		exit 1
+	;;
+esac
 
-echo "Checkout Github Repository..."
-echo
-
-if [ -d $HOME/express-api-example ]; then
-	rm -rf $HOME/express-api-example
-	git clone git@github.com:ligtonribeiro/express-api-example.git
-else
-	git clone git@github.com:ligtonribeiro/express-api-example.git
-fi
-
-echo
-
-echo "Install Dependencies..."
-
-echo
-cd $HOME/express-api-example
-npm install
-echo
-
-echo "Build da aplicação"
-echo
-npm run build
-echo
-
-echo "Start service application..."
-echo
-sudo systemctl start express-api.service
-
-echo "End pipeline"
+echo "#--------------------------------------------#"
+echo "#             PIPELINE FINISH                #"
+echo "#--------------------------------------------#"
 
