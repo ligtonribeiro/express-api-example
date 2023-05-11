@@ -2,7 +2,7 @@ name: "CD"
 
 on:
   push:
-    branches: ["main"]
+    branches: ["main", "release"]
   pull_request:
     branches: ["*"]
 
@@ -36,6 +36,10 @@ jobs:
             StrictHostKeyChecking no
           END
 
-      - name: Application deployment
+      - name: Deploy em Produção
         if: github.ref == 'refs/heads/main'
-        run: ssh google-cloud ./deploy.sh
+        run: ssh google-cloud ./deploy.sh --prod
+
+      - name: Deploy em Dev
+        if: github.ref == 'refs/heads/release'
+        run: ssh google-cloud ./deploy.sh --release
