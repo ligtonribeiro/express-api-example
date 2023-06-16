@@ -44,23 +44,25 @@ jobs:
           push: true
           tags: ligtonribeiro/api-express-example
 
-      # - name: Setup SSH Azure
-      #   env:
-      #     SSH_USER: ${{ secrets.GCP_SSH_USER }}
-      #     SSH_HOST: ${{ secrets.GCP_SSH_HOST }}
-      #     SSH_KEY: ${{ secrets.GCP_SSH_KEY }}
-      #   run: |
-      #     mkdir ~/.ssh
-      #     echo "$SSH_KEY" > ~/.ssh/id_rsa_gcp
-      #     chmod 600 ~/.ssh/id_rsa_gcp
-      #     cat >> ~/.ssh/config << END
-      #       Host google-cloud
-      #       HostName $SSH_HOST
-      #       User $SSH_USER
-      #       IdentityFile ~/.ssh/id_rsa_gcp
-      #       StrictHostKeyChecking no
-      #     END
+      - name: Setup SSH Azure
+        env:
+          SSH_USER: ${{ secrets.AZURE_SSH_USER }}
+          SSH_HOST: ${{ secrets.AZURE_SSH_HOST }}
+          SSH_KEY: ${{ secrets.AZURE_SSH_KEY }}
+        run: |
+          mkdir ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          cat >> ~/.ssh/config << END
+            Host azure-cloud
+            HostName $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/id_rsa
+            StrictHostKeyChecking no
+          END
 
-      # - name: Deploy em Produção
-      #   if: github.ref == 'refs/heads/main'
-      #   run: ssh google-cloud ./deploy.sh --prod
+      - name: Deploy em Produção
+        if: github.ref == 'refs/heads/main'
+        run: |
+          docker pull ligtonribeiro/api-express-example
+          docker run --name api-express -p 3000:3000 ligtonribeiro/api-express-example
