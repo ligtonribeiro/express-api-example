@@ -2,7 +2,7 @@ name: "CD"
 
 on:
   push:
-    branches: ["main", "release"]
+    branches: ["main"]
   pull_request:
     branches: ["*"]
 
@@ -19,27 +19,48 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Setup SSH GCP
-        env:
-          SSH_USER: ${{ secrets.GCP_SSH_USER }}
-          SSH_HOST: ${{ secrets.GCP_SSH_HOST }}
-          SSH_KEY: ${{ secrets.GCP_SSH_KEY }}
-        run: |
-          mkdir ~/.ssh
-          echo "$SSH_KEY" > ~/.ssh/id_rsa_gcp
-          chmod 600 ~/.ssh/id_rsa_gcp
-          cat >> ~/.ssh/config << END
-            Host google-cloud
-            HostName $SSH_HOST
-            User $SSH_USER
-            IdentityFile ~/.ssh/id_rsa_gcp
-            StrictHostKeyChecking no
-          END
+      - name: Instalação Nodejs
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
 
-      - name: Deploy em Produção
-        if: github.ref == 'refs/heads/main'
-        run: ssh google-cloud ./deploy.sh --prod
+      - name: Instalação das dependências
+        run: npm install
 
-      - name: Deploy em Dev
-        if: github.ref == 'refs/heads/release'
-        run: ssh google-cloud ./deploy.sh --release
+      - name: Build do Projeto
+        run: npm run build
+
+      - name: Login no Docker Hub
+        uses: docker/login-action@v2.0.0
+        with:
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v3.0.0
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ligtonribeiro/api-express-example
+
+      # - name: Setup SSH Azure
+      #   env:
+      #     SSH_USER: ${{ secrets.GCP_SSH_USER }}
+      #     SSH_HOST: ${{ secrets.GCP_SSH_HOST }}
+      #     SSH_KEY: ${{ secrets.GCP_SSH_KEY }}
+      #   run: |
+      #     mkdir ~/.ssh
+      #     echo "$SSH_KEY" > ~/.ssh/id_rsa_gcp
+      #     chmod 600 ~/.ssh/id_rsa_gcp
+      #     cat >> ~/.ssh/config << END
+      #       Host google-cloud
+      #       HostName $SSH_HOST
+      #       User $SSH_USER
+      #       IdentityFile ~/.ssh/id_rsa_gcp
+      #       StrictHostKeyChecking no
+      #     END
+
+      # - name: Deploy em Produção
+      #   if: github.ref == 'refs/heads/main'
+      #   run: ssh google-cloud ./deploy.sh --prod

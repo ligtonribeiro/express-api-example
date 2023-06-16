@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  api:
+    image: ligtonribeiro/api-express-example
+    container_name: api-express
+    ports:
+      - 3000:3000
+    restart: unless-stopped
