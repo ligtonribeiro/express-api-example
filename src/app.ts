@@ -5,8 +5,7 @@ const app: Application = express();
 app.disable("x-power-by");
 
 app.use((req, res, next) => {
-  console.log("Request Type:", req.method);
-  console.log("Time:", Date.now());
+  console.log(`Request Type: ${req.ip} - ${req.method}: ${req.path}`);
   next();
 });
 
