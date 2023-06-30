@@ -1,68 +1,68 @@
-name: "CD"
+# name: "CD"
 
-on:
-  push:
-    branches: ["main"]
-  pull_request:
-    branches: ["*"]
+# on:
+#   push:
+#     branches: ["main"]
+#   pull_request:
+#     branches: ["*"]
 
-jobs:
-  tests:
-    uses: ./.github/workflows/ci.yml
-    secrets: inherit
+# jobs:
+#   tests:
+#     uses: ./.github/workflows/ci.yml
+#     secrets: inherit
 
-  deploy:
-    needs: tests
-    runs-on: ubuntu-latest
+#   deploy:
+#     needs: tests
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
+#     steps:
+#       - name: Checkout Repository
+#         uses: actions/checkout@v3
 
-      - name: Instalação Nodejs
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
+#       - name: Instalação Nodejs
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: 16
 
-      - name: Instalação das dependências
-        run: npm install
+#       - name: Instalação das dependências
+#         run: npm install
 
-      - name: Build do Projeto
-        run: npm run build
+#       - name: Build do Projeto
+#         run: npm run build
 
-      - name: Login no Docker Hub
-        uses: docker/login-action@v2.0.0
-        with:
-          username: ${{ secrets.DOCKERHUB_USER }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+#       - name: Login no Docker Hub
+#         uses: docker/login-action@v2.0.0
+#         with:
+#           username: ${{ secrets.DOCKERHUB_USER }}
+#           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and Push Docker Image
-        uses: docker/build-push-action@v3.0.0
-        with:
-          context: .
-          file: ./Dockerfile
-          push: true
-          tags: ligtonribeiro/api-express-example
+#       - name: Build and Push Docker Image
+#         uses: docker/build-push-action@v3.0.0
+#         with:
+#           context: .
+#           file: ./Dockerfile
+#           push: true
+#           tags: ligtonribeiro/api-express-example
 
-      - name: Setup SSH Azure
-        env:
-          SSH_USER: ${{ secrets.AZURE_SSH_USER }}
-          SSH_HOST: ${{ secrets.AZURE_SSH_HOST }}
-          SSH_KEY: ${{ secrets.AZURE_SSH_KEY }}
-        run: |
-          mkdir ~/.ssh
-          echo "$SSH_KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          cat >> ~/.ssh/config << END
-            Host azure-cloud
-            HostName $SSH_HOST
-            User $SSH_USER
-            IdentityFile ~/.ssh/id_rsa
-            StrictHostKeyChecking no
-          END
+#       - name: Setup SSH Azure
+#         env:
+#           SSH_USER: ${{ secrets.AZURE_SSH_USER }}
+#           SSH_HOST: ${{ secrets.AZURE_SSH_HOST }}
+#           SSH_KEY: ${{ secrets.AZURE_SSH_KEY }}
+#         run: |
+#           mkdir ~/.ssh
+#           echo "$SSH_KEY" > ~/.ssh/id_rsa
+#           chmod 600 ~/.ssh/id_rsa
+#           cat >> ~/.ssh/config << END
+#             Host azure-cloud
+#             HostName $SSH_HOST
+#             User $SSH_USER
+#             IdentityFile ~/.ssh/id_rsa
+#             StrictHostKeyChecking no
+#           END
 
-      - name: Deploy em Produção
-        if: github.ref == 'refs/heads/main'
-        run: |
-          ssh azure-cloud docker pull ligtonribeiro/api-express-example
-          ssh azure-cloud docker run -d --name api-express -p 3000:3000 ligtonribeiro/api-express-example
+#       - name: Deploy em Produção
+#         if: github.ref == 'refs/heads/main'
+#         run: |
+#           ssh azure-cloud docker pull ligtonribeiro/api-express-example
+#           ssh azure-cloud docker run -d --name api-express -p 3000:3000 ligtonribeiro/api-express-example
