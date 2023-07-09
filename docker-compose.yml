@@ -13,6 +13,8 @@ services:
       driver: fluentd
       options:
         fluentd-address: localhost:24224
+    networks:
+      - api-net
   
   loki:
     image: grafana/loki:latest
@@ -29,6 +31,8 @@ services:
       - renderer
     ports:
       - "3000:3000"
+    volumes:
+      - grafana-storage:/var/lib/grafana
     environment:
       GF_RENDERING_SERVER_URL: http://renderer:8081/render
       GF_RENDERING_CALLBACK_URL: http://grafana:3000/
@@ -60,7 +64,27 @@ services:
       - "24224:24224/udp"
     networks:
       - api-net
+  
+  prometheus:
+      image: prom/prometheus
+      user: root
+      container_name: prometheus
+      hostname: prometheus
+      restart: unless-stopped
+      volumes:
+        - ./.docker/prometheus/config:/etc/prometheus
+        - ./.docker/prometheus/data:/prometheus
+      command:
+        - '--config.file=/etc/prometheus/prometheus.yml'
+        - '--storage.tsdb.path=/prometheus'
+      ports:
+        - 9090:9090
+      networks:
+        - api-net
 
 networks:
   api-net:
     external: true
+
+volumes:
+  grafana-storage:
