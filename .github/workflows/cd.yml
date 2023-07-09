@@ -66,5 +66,5 @@ jobs:
         run: |
           ssh oracle-cloud docker login -u${{ secrets.DOCKERHUB_USER }} -p${{ secrets.DOCKERHUB_TOKEN }}
           scp docker-compose.yml fluent-bit.conf oracle-cloud:/home/opc/api-express-example
-          ssh oracle-cloud docker compose pull
-          ssh oracle-cloud docker compose up -d
+          ssh oracle-cloud docker compose -f api-express-example/docker-compose.yml pull
+          ssh oracle-cloud docker compose -f api-express-example/docker-compose.yml up -d
