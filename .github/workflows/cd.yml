@@ -66,7 +66,6 @@ jobs:
         run: |
           ssh oracle-cloud docker login -u${{ secrets.DOCKERHUB_USER }} -p${{ secrets.DOCKERHUB_TOKEN }}
           scp docker-compose.yml fluent-bit.conf oracle-cloud:/home/opc/api-express-example
-          scp docker-compose.yml .docker/prometheus/config/prometheus.yml \ 
-            oracle-cloud:/home/opc/api-express-example/.docker/prometheus/config
+          scp .docker/prometheus/config/prometheus.yml oracle-cloud:/home/opc/api-express-example/.docker/prometheus/config
           ssh oracle-cloud docker compose -f api-express-example/docker-compose.yml pull
           ssh oracle-cloud docker compose -f api-express-example/docker-compose.yml up -d
